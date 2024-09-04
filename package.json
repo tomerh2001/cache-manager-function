@@ -13,6 +13,8 @@
     "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/lodash": "^4.17.7",
     "bun-types": "latest",
+    "jest": "^29.7.0",
+    "vitest": "^2.0.5",
     "xo": "^0.59.3"
   },
   "peerDependencies": {
@@ -23,6 +25,7 @@
   },
   "dependencies": {
     "cache-manager": "^5.7.6",
+    "cache-manager-ioredis-yet": "^2.1.1",
     "cache-manager-redis-store": "^3.0.1",
     "eslint-plugin-th-rules": "^1.13.4",
     "lodash": "^4.17.21",

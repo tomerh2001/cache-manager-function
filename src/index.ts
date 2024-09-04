@@ -2,19 +2,19 @@
 // eslint-disable-next-line import/no-unassigned-import
 import 'reflect-metadata';
 import cacheManager, {type Cache} from 'cache-manager';
-import {redisStore} from 'cache-manager-redis-store';
+import {redisStore} from 'cache-manager-ioredis-yet';
 import {get} from 'lodash';
 
-type CacheInitializationConfig = {
+export type CacheInitializationConfig = {
 	host?: string;
 	port?: number;
 	password?: string;
 	ttl: number;
 };
 
-type KeySelector = ((...arguments_: unknown[]) => unknown[]) | string | string[];
+export type KeySelector = ((...arguments_: unknown[]) => unknown[]) | string | string[];
 
-type CacheOptions = {
+export type CacheOptions = {
 	ttl: number;
 	keySelector: KeySelector;
 } & Partial<CacheInitializationConfig>;
@@ -22,22 +22,22 @@ type CacheOptions = {
 let cacheManagerInstance: Cache | undefined;
 
 /**
- * Initializes the cache manager with Redis store by default.
+ * Initializes the cache manager with ioredis store by default.
  */
-async function initializeCache(config: CacheInitializationConfig): Promise<void> {
-	cacheManagerInstance = await cacheManager.caching({
-		store: redisStore,
+export async function initializeCache(config: CacheInitializationConfig): Promise<void> {
+	const store = async () => redisStore({
 		host: config.host ?? 'localhost',
 		port: config.port ?? 6379,
 		password: config.password,
-		ttl: config.ttl,
 	});
+
+	cacheManagerInstance = await cacheManager.caching(store, {ttl: config.ttl});
 }
 
 /**
  * Automatically initializes cache if not already initialized and initialization data is present.
  */
-async function ensureCacheInitialized(config?: CacheInitializationConfig): Promise<void> {
+export async function ensureCacheInitialized(config?: CacheInitializationConfig): Promise<void> {
 	if (!cacheManagerInstance && config) {
 		await initializeCache(config);
 	}
@@ -47,7 +47,7 @@ async function ensureCacheInitialized(config?: CacheInitializationConfig): Promi
  * Decorator to provide metadata for caching with TTL and key selection.
  */
 export function cacheMeta(options: CacheOptions) {
-	return async (target: unknown, propertyKey: string): Promise<void> => {
+	return async (target: Record<string, unknown>, propertyKey: string): Promise<void> => {
 		await ensureCacheInitialized(options);
 		Reflect.defineMetadata('cacheKeySelector', options.keySelector, target, propertyKey);
 		Reflect.defineMetadata('cacheTtl', options.ttl, target, propertyKey);
@@ -86,7 +86,7 @@ export function cache(options: CacheOptions) {
 /**
  * Creates a cache key based on the key selector function or paths.
  */
-function createCacheKey(arguments_: unknown[], keySelector: KeySelector): string {
+export function createCacheKey(arguments_: unknown[], keySelector: KeySelector): string {
 	if (typeof keySelector === 'function') {
 		const result = keySelector(...arguments_);
 		return Array.isArray(result) ? result.join(':') : String(result);
