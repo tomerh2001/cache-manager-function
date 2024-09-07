@@ -5,7 +5,7 @@
 [![CodeQL](../../actions/workflows/codeql.yml/badge.svg)](../../actions/workflows/codeql.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tomerh2001/semantic-release-repo-template/badge)](https://securityscorecards.dev/viewer/?uri=github.com/tomerh2001/semantic-release-repo-template)
 
-Cache the outputs of functions based on their arguments using `cache-manager`.
+Cache the outputs of functions based on their arguments using [cache-manager](https://github.com/jaredwray/cacheable)
 
 ## Installation
 
