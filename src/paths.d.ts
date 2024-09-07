@@ -34,15 +34,4 @@ export type Paths<T> = T extends Record<string, unknown>
  * @typeparam F - The function type.
  * @typeparam Paths - The paths of the arguments of the function type.
  */
-export type ArgumentPaths1<F extends AnyFunction> = SingleOrArray<Paths<Parameters<F>>>;
-
-/**
- * Represents a function that takes arguments of type `Parameters<F>` and returns `ArgumentPaths1<F>`.
- */
-export type ArgumentPaths2<F extends AnyFunction> = (...arguments_: Parameters<F>) => ArgumentPaths1<F>;
-
-/**
- * Represents the argument paths for a given function type.
- * @template F - The function type.
- */
-export type ArgumentPaths<F extends AnyFunction> = ArgumentPaths1<F> | ArgumentPaths2<F>;
+export type ArgumentPaths<F extends AnyFunction> = SingleOrArray<Paths<Parameters<F>>>;

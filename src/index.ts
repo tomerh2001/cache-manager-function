@@ -1,31 +1,19 @@
 
+import _ from 'lodash';
 import type {CachedFunctionOptions} from './index.d';
-import type {AnyFunction} from './paths.d';
+import type {AnyFunction, ArgumentPaths} from './paths.d';
 
-export function cachedFunction<F extends AnyFunction>(function_: F, options: CachedFunctionOptions<F>) {
-	console.log(options);
-	return function_;
+export function selectorToCacheKey<F extends AnyFunction>(arguments_: Parameters<F>, selector: ArgumentPaths<F>) {
+	const selectors = _.castArray(selector);
+	const values = _.at(arguments_, selectors);
+	const result = _.zipObject(selectors, values);
+	return JSON.stringify(result);
 }
 
-/** TEST */
-type Person = {
-	name: string;
-	age: number;
-	address: {
-		city: string;
-		zip: number;
+export function cachedFunction<F extends AnyFunction>(function_: F, options: CachedFunctionOptions<F>) {
+	return (...arguments_: Parameters<F>): ReturnType<F> => {
+		const cacheKey = selectorToCacheKey(arguments_, options.selector);
+		console.log({cacheKey});
+		return function_(...arguments_);
 	};
-};
-
-const person: Person = {
-	name: 'John Doe',
-	age: 30,
-	address: {
-		city: 'New York',
-		zip: 10_001,
-	},
-};
-
-cachedFunction((person: Person) => person.name, {
-	selector: person => person.name,
-});
+}
