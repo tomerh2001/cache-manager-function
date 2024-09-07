@@ -94,7 +94,7 @@ describe('selectorToCacheKey', () => {
 		const selector: any = [];
 		const key = selectorToCacheKey(arguments_, selector);
 
-		expect(key).toBe('{}');
+		expect(key).toBe('[]');
 	});
 
 	it('should throw an error for non-existent paths', () => {
@@ -153,7 +153,7 @@ describe('selectorToCacheKey', () => {
 		const selector: any = [];
 		const key = selectorToCacheKey(arguments_, selector);
 
-		expect(key).toBe('{}');
+		expect(key).toBe(JSON.stringify(arguments_));
 	});
 
 	it('should handle paths that skip levels correctly', () => {

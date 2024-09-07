@@ -10,6 +10,6 @@ export type CachedFunctionInitializerOptions =
 	{store: Store};
 
 export type CachedFunctionOptions<F extends AnyFunction> = Partial<CachedFunctionInitializerOptions> & {
-	selector: ArgumentPaths<F>;
+	selector?: ArgumentPaths<F>;
 	ttl?: number;
 };

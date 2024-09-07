@@ -13,7 +13,9 @@ export type SingleOrArray<T> = T | T[];
 /**
  * Represents any function that takes any number of arguments and returns any value.
  */
-export type AnyFunction = (...arguments_: any[]) => any;
+export type AnyFunction = ((...arguments_: any[]) => any) & {
+	cacheKeys?: string[];
+};
 
 /**
  * Represents the type for generating paths of a given object.

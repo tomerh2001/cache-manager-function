@@ -25,6 +25,10 @@ export function resetCache() {
 
 export function selectorToCacheKey<F extends AnyFunction>(arguments_: Parameters<F>, selector: ArgumentPaths<F>) {
 	const selectors = _.castArray(selector);
+	if (selectors.length === 0) {
+		return JSON.stringify(arguments_);
+	}
+
 	const values = selectors.map(path => {
 		const value = _.get(arguments_, path) as unknown;
 		if (value === undefined) {
@@ -43,7 +47,8 @@ export function selectorToCacheKey<F extends AnyFunction>(arguments_: Parameters
 
 export function cachedFunction<F extends AnyFunction>(function_: F, options: CachedFunctionOptions<F>) {
 	return async (...arguments_: Parameters<F>): Promise<ReturnType<F>> => {
-		const cacheKey = selectorToCacheKey(arguments_, options.selector);
+		const selector = options.selector ?? function_.cacheKeys ?? [];
+		const cacheKey = selectorToCacheKey(arguments_, selector);
 		const cache = await getOrInitializeCache(options as CachedFunctionInitializerOptions);
 
 		const cacheValue = await cache.get<ReturnType<F>>(cacheKey);
@@ -56,4 +61,10 @@ export function cachedFunction<F extends AnyFunction>(function_: F, options: Cac
 
 		return result;
 	};
+}
+
+export function cacheKeys<F extends AnyFunction>(function_: F, ...selector: Array<ArgumentPaths<F>>) {
+	const selectors = _(selector).flatMap().value();
+	function_.cacheKeys = selectors;
+	return function_;
 }
