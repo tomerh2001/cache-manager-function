@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -104,15 +105,31 @@ export function cachedFunction<F extends CacheableFunction>(function_: F, option
 }
 
 /**
- * Specify the options used when `cachedFunction` is invoked with this function.
- * The decorator arguments take precedence over the options provided to `cachedFunction`.
+ * Decorator for caching the result of a function based on selected arguments.
+ *
+ * This overload allows specifying the arguments that will be used to generate the cache key, and optionally a TTL (time to live).
  *
  * @template F - The type of the cacheable function.
- * @param {ArgumentPaths<F> | CachedFunctionOptions<F>} selectorOrOptions - The selector or options for caching.
- * @param {number} [ttl] - The time-to-live (TTL) for the cache.
- * @returns {any} - The modified descriptor object.
+ * @param {ArgumentPaths<F>} selector - The paths of the arguments to include in the cache key.
+ * This specifies which function arguments will be considered when generating the cache key.
+ * @param {number} [ttl] - Optional time to live (TTL) in seconds for the cached value.
+ * If not provided, the cached value will persist until it is evicted based on the cache settings.
+ * @returns {Function} A decorator function that adds caching options to the method's descriptor.
  */
-export function CacheOptions<F extends CacheableFunction>( // eslint-disable-line @typescript-eslint/naming-convention
+export function CacheOptions<F extends CacheableFunction>(selector: ArgumentPaths<F>, ttl?: number): any;
+
+/**
+ * Decorator for caching the result of a function.
+ *
+ * This overload allows providing a complete configuration object that specifies all caching behaviors,
+ * including which arguments to use for the cache key, the TTL, etc.
+ *
+ * @template F - The type of the cacheable function.
+ * @param {CachedFunctionOptions<F>} options - The full configuration options for caching the function.
+ */
+export function CacheOptions<F extends CacheableFunction>(options: CachedFunctionOptions<F>): any;
+
+export function CacheOptions<F extends CacheableFunction>(
 	selectorOrOptions: ArgumentPaths<F> | CachedFunctionOptions<F>,
 	ttl?: number,
 ): any {

@@ -1,116 +1,105 @@
-# cache-manager-function
+# Cache Manager Function
 
-`cache-manager-function` is a vertical integration library that extends `cache-manager` to provide easy-to-use function-level caching with support for Redis and other stores. It allows you to cache function results with decorators, automatic cache initialization, and customizable cache key selection strategies.
+A TypeScript utility package to easily cache function results using `cache-manager`. It provides a set of functions and decorators to cache the output of functions and retrieve results from the cache for faster performance.
 
 ## Features
 
-- **Function Caching**: Easily cache async functions to improve performance.
-- **Class Method Caching**: Use decorators to add caching to class methods.
-- **Custom Key Selection**: Dynamically generate cache keys using functions, strings, or paths.
-- **TTL Management**: Set cache expiration times to keep your data fresh.
-- **Seamless Integration**: Built on top of `cache-manager` for reliable and configurable caching.
+- **Easy cache initialization**: Automatically manages cache initialization and configuration.
+- **Flexible caching**: Allows fine-grained control over cache key generation and TTL (time-to-live).
+- **Decorator support**: Simplify caching configurations with the `@CacheOptions` decorator.
 
 ## Installation
 
-```shell
-npm install cache-manager-function cache-manager cache-manager-redis-store
+To install the package, use npm or yarn:
+
+```bash
+npm install cache-manager-function
+# or
+yarn add cache-manager-function
 ```
 
 ## Usage
 
-### 1. Initialize Cache Manager
+### Initialize Cache
 
-Before using caching, initialize the cache manager with your desired configuration. By default, it uses Redis as the cache store.
+Before using the caching functions, you need to initialize the cache.
 
 ```typescript
-import { initializeCache } from 'cache-manager-function';
+import { getOrInitializeCache } from `cache-manager-function`;
 
-await initializeCache({
-  host: 'localhost',
-  port: 6379,
-  ttl: 60, // Time-to-live in seconds
+// Initialize the cache with your store and configuration options.
+await getOrInitializeCache({
+  store: { create: () => /* your store logic */ },
+  config: { ttl: 60 },
 });
 ```
 
-### 2. Caching Functions with `cacheFunction`
+### Caching a Function
 
-Wrap your async functions with `cacheFunction` to automatically cache their results.
+You can cache the result of a function using the `cachedFunction` wrapper.
 
 ```typescript
-import { cacheFunction } from 'cache-manager-function';
+import { cachedFunction } from `cache-manager-function`;
 
-async function fetchData(id) {
-  // Fetch data logic
+// Define a function you want to cache
+async function fetchData(id: number): Promise<string> {
+  // Simulate an API call or some expensive operation
+  return `Data for ${id}`;
 }
 
-const cachedFetchData = cacheFunction(fetchData, {
-  ttl: 120,
-  keySelector: ['id'],
+// Create a cached version of the function
+const cachedFetchData = cachedFunction(fetchData, {
+  selector: [`0`], // Cache key based on the first argument (id)
+  ttl: 120,        // Cache the result for 120 seconds
 });
 
-const result = await cachedFetchData(123);
+// Use the cached function
+const data = await cachedFetchData(1);
+console.log(data); // Outputs: `Data for 1`
 ```
 
-### 3. Using `@cache` Decorator for Class Methods
+### Using the CacheOptions Decorator
 
-Use the `@cache` decorator to cache class methods with customizable TTL and key selection.
+You can specify caching options directly on the function using the `@CacheOptions` decorator.
 
 ```typescript
-import { cache } from 'cache-manager-function';
+import { CacheOptions, cachedFunction } from `cache-manager-function`;
 
 class DataService {
-  @cache({ ttl: 180, keySelector: 'id' })
-  async getData(id) {
-    // Fetch data logic
+  @CacheOptions([`0`], 180) // Cache for 180 seconds based on the first argument
+  async getData(id: number): Promise<string> {
+    return `Service Data for ${id}`;
   }
 }
 
 const service = new DataService();
-const data = await service.getData(123);
-```
-
-### 4. Using `@cacheMeta` for Metadata
-
-The `@cacheMeta` decorator sets up metadata for caching, specifying how cache keys and TTLs are handled. This metadata can be used by other mechanisms to manage caching behavior.
-
-```typescript
-import { cacheMeta } from 'cache-manager-function';
-
-class UserService {
-  @cacheMeta({ ttl: 60, keySelector: ['userId'] })
-  async getUser(userId) {
-    // Method logic
-  }
-}
+const cachedGetData = cachedFunction(service.getData.bind(service));
+const result = await cachedGetData(2);
+console.log(result); // Outputs: `Service Data for 2`
 ```
 
 ## API
 
-### `initializeCache(config: CacheInitializationConfig): Promise<void>`
+### `getOrInitializeCache(options?: CachedFunctionInitializerOptions)`
 
-Initializes the cache manager with the specified configuration.
+Retrieves or initializes the cache. Throws an error if the cache is not initialized and no options are provided.
 
-- **config**: Configuration object with optional `host`, `port`, `password`, and required `ttl`.
+- `options`: Configuration for initializing the cache.
 
-### `cacheFunction(function_, options): Function`
+### `cachedFunction(function_, options?)`
 
-Wraps and caches an async function based on the provided options.
+Caches the result of a function. Returns the cached value if available, otherwise executes the function and caches the result.
 
-- **function_**: The function to be cached.
-- **options**: Configuration options including `ttl` and `keySelector`.
+- `function_`: The function to cache.
+- `options`: Configuration options for caching.
 
-### `@cache(options: CacheOptions)`
+### `CacheOptions(selectorOrOptions, ttl?)`
 
-A decorator to cache class methods.
+A decorator that specifies caching options for the function.
 
-- **options**: Configuration object with `ttl` and `keySelector`.
-
-### `@cacheMeta(options: CacheOptions)`
-
-Adds caching metadata to methods for defining cache keys and TTL without direct caching.
-
-- **options**: Configuration object with `ttl` and `keySelector`.
+- `selectorOrOptions`: Selector or options for caching.
+- `ttl`: Time-to-live in seconds.
 
 ## License
 
-This library is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+MIT License.
