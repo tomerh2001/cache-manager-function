@@ -25,7 +25,7 @@ const cache = await getOrInitializeCache<RedisStore>({
 });
 const cachedCreatePerson = cachedFunction(createPerson, {
 	selector: '0.name',
-	ttl: 10_000,
+	ttl: 1000,
 });
 
 const person = await cachedCreatePerson({
@@ -38,3 +38,5 @@ const person = await cachedCreatePerson({
 	},
 });
 console.log(person.id, person.name);
+
+await cache.store.client.quit();
