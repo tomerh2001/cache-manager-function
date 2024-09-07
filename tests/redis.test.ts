@@ -21,7 +21,7 @@ type Person = {
 };
 
 class CachedPersonCreator {
-	@CacheOptions({selector: '0.name', ttl: 1000})
+	@CacheOptions('0.name', 10_000)
 	static async createPerson(person: Person) {
 		console.log('Person created!!!!!');
 		return person;
