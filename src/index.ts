@@ -1,7 +1,19 @@
 
 import _ from 'lodash';
-import type {CachedFunctionOptions} from './index.d';
+import {type Cache, caching} from 'cache-manager';
+import type {CachedFunctionInitializerOptions, CachedFunctionOptions} from './index.d';
 import type {AnyFunction, ArgumentPaths} from './paths.d';
+
+let cache: Cache | undefined;
+
+export async function getOrInitializeCache(options: CachedFunctionInitializerOptions) {
+	if (!('store' in options)) {
+		throw new Error('store is required');
+	}
+
+	cache ||= await ('config' in options ? caching(options.store, options.config) : caching(options.store));
+	return cache;
+}
 
 export function selectorToCacheKey<F extends AnyFunction>(arguments_: Parameters<F>, selector: ArgumentPaths<F>) {
 	const selectors = _.castArray(selector);
