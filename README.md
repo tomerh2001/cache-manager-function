@@ -119,7 +119,3 @@ Decorator to cache function results based on selected arguments.
 - **Parameters:**
   - `selector`: Paths of the arguments to include in the cache key.
   - `ttl` (Optional): Time-to-live for the cached result.
-
-## License
-
-MIT License. See the LICENSE file for more details.
