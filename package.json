@@ -30,5 +30,6 @@
     "eslint-plugin-th-rules": "^1.13.4",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.2.2"
-  }
+  },
+  "packageManager": "yarn@4.4.1"
 }
