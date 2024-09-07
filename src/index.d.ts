@@ -9,6 +9,7 @@ export type CachedFunctionInitializerOptions =
 	{store: FactoryStore; config: FactoryConfig} |
 	{store: Store};
 
-export type CachedFunctionOptions<F extends AnyFunction> =
-	CachedFunctionInitializerOptions &
-	{selector?: ArgumentPaths<F>; ttl?: number};
+export type CachedFunctionOptions<F extends AnyFunction> = CachedFunctionInitializerOptions & {
+	selector: ArgumentPaths<F>;
+	ttl?: number;
+};
