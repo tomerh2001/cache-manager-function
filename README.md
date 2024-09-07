@@ -1,105 +1,120 @@
-# Cache Manager Function
+# cache-manager-function
 
-A TypeScript utility package to easily cache function results using `cache-manager`. It provides a set of functions and decorators to cache the output of functions and retrieve results from the cache for faster performance.
-
-## Features
-
-- **Easy cache initialization**: Automatically manages cache initialization and configuration.
-- **Flexible caching**: Allows fine-grained control over cache key generation and TTL (time-to-live).
-- **Decorator support**: Simplify caching configurations with the `@CacheOptions` decorator.
+`cache-manager-function` provides utilities to cache the outputs of functions based on their arguments using `cache-manager`.
 
 ## Installation
 
-To install the package, use npm or yarn:
+Install the package using npm:
 
 ```bash
 npm install cache-manager-function
-# or
+```
+
+or with Yarn:
+
+```bash
 yarn add cache-manager-function
 ```
 
 ## Usage
 
-### Initialize Cache
+### 1. Initialize
 
-Before using the caching functions, you need to initialize the cache.
+Call `getOrInitializeCache` to manually initialize the cache.
 
 ```typescript
-import { getOrInitializeCache } from `cache-manager-function`;
-
-// Initialize the cache with your store and configuration options.
-await getOrInitializeCache({
-  store: { create: () => /* your store logic */ },
-  config: { ttl: 60 },
+const cache = await getOrInitializeCache<RedisStore>({
+  store: await redisStore({
+    host: 'localhost',
+    port: 6379,
+  }),
 });
 ```
 
-### Caching a Function
-
-You can cache the result of a function using the `cachedFunction` wrapper.
+Alternatively, you can initialize the cache implicitly by providing the store directly to `cachedFunction`.
 
 ```typescript
-import { cachedFunction } from `cache-manager-function`;
+const multiply = (x, y) => x * y;
 
-// Define a function you want to cache
-async function fetchData(id: number): Promise<string> {
-  // Simulate an API call or some expensive operation
-  return `Data for ${id}`;
-}
-
-// Create a cached version of the function
-const cachedFetchData = cachedFunction(fetchData, {
-  selector: [`0`], // Cache key based on the first argument (id)
-  ttl: 120,        // Cache the result for 120 seconds
+const cachedMultiply = cachedFunction(multiply, {
+  store: await redisStore({
+    host: 'localhost',
+    port: 6379,
+  }),
 });
 
-// Use the cached function
-const data = await cachedFetchData(1);
-console.log(data); // Outputs: `Data for 1`
+// Initializes the cache and caches the result
+await cachedMultiply(2, 3); 
 ```
 
-### Using the CacheOptions Decorator
+### 2. Caching with `cachedFunction`
 
-You can specify caching options directly on the function using the `@CacheOptions` decorator.
+The `selector` option specifies which arguments should be used to generate the cache key.
+
+```typescript
+type Person = { name: string; lastname: string };
+
+const greet = (person: Person) => `Hello, ${person.name} ${person.lastname}!`;
+
+// Caches based on `person.name` and `person.lastname`
+const cachedGreet = cachedFunction(greet, {
+  selector: ['0.name', '0.lastname']
+});
+
+await cachedGreet({ person: { name: `John`, lastname: `Doe` } }); // Caches the result based on name=John and lastname=Doe
+await cachedGreet({ person: { name: `Jane`, lastname: `Doe` } }); // Caches the result based on name=Jane and lastname=Doe
+```
+
+### 3. Using the `CacheOptions` decorator
+
+`CacheOptions` receives the exact same options that `cachedFunction` receives. It’s an alternative way to define the cache behavior directly on the function.
 
 ```typescript
 import { CacheOptions, cachedFunction } from `cache-manager-function`;
 
-class DataService {
-  @CacheOptions([`0`], 180) // Cache for 180 seconds based on the first argument
-  async getData(id: number): Promise<string> {
-    return `Service Data for ${id}`;
+class UserService {
+  @CacheOptions(['0'], 300) // Specifies to cache based on the first argument (id), with a TTL of 300ms
+  async getUser(id: number) {
+    return `User with ID: ${id}`;
   }
 }
 
-const service = new DataService();
-const cachedGetData = cachedFunction(service.getData.bind(service));
-const result = await cachedGetData(2);
-console.log(result); // Outputs: `Service Data for 2`
+const service = new UserService();
+const cachedFetchUser = cachedFunction(service.getUser);
+
+await userService.getUser(1); // Executes and caches based on the `id` argument
+await userService.getUser(1); // Returns the cached result
 ```
 
 ## API
 
-### `getOrInitializeCache(options?: CachedFunctionInitializerOptions)`
+### getOrInitializeCache
 
-Retrieves or initializes the cache. Throws an error if the cache is not initialized and no options are provided.
+Initializes or retrieves the cache.
 
-- `options`: Configuration for initializing the cache.
+- **Parameters:**
+  - `options` (Optional): Configuration options to initialize the cache.
 
-### `cachedFunction(function_, options?)`
+- **Returns:** A promise that resolves to the cache instance.
 
-Caches the result of a function. Returns the cached value if available, otherwise executes the function and caches the result.
+### cachedFunction
 
-- `function_`: The function to cache.
-- `options`: Configuration options for caching.
+Caches the result of a function based on its arguments.
 
-### `CacheOptions(selectorOrOptions, ttl?)`
+- **Parameters:**
+  - `function_`: The function to cache.
+  - `options` (Optional): Configuration options for caching.
 
-A decorator that specifies caching options for the function.
+- **Returns:** A cached function that returns a promise with the result.
 
-- `selectorOrOptions`: Selector or options for caching.
-- `ttl`: Time-to-live in seconds.
+### CacheOptions
+
+Decorator to cache function results based on selected arguments.
+
+- **Parameters:**
+  - `selector`: Paths of the arguments to include in the cache key.
+  - `ttl` (Optional): Time-to-live for the cached result.
 
 ## License
 
-MIT License.
+MIT License. See the LICENSE file for more details.
