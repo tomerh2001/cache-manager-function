@@ -5,8 +5,9 @@ import _ from 'lodash';
 import {
 	type Cache, caching, type Store,
 } from 'cache-manager';
-import type {CachedFunctionInitializerOptions, CachedFunctionOptions} from './index.d';
-import type {AnyFunction as CacheableFunction, ArgumentPaths} from './paths.d';
+import {
+	type CachedFunctionInitializerOptions, type CachedFunctionOptions, type CacheableFunction, type ArgumentPaths,
+} from './index.d';
 
 let cache: Cache | undefined;
 
