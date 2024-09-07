@@ -4,7 +4,7 @@ import {
 } from 'bun:test';
 import {memoryStore} from 'cache-manager';
 import {
-	initializeCache, selectorToCacheKey, cachedFunction, resetCache,
+	getOrInitializeCache, selectorToCacheKey, cachedFunction, resetCache,
 } from '../src/index';
 import type {CachedFunctionInitializerOptions, CachedFunctionOptions} from '../src/index.d';
 
@@ -19,7 +19,7 @@ describe('initializeCache', () => {
 			config: {max: 100, ttl: 60},
 		};
 
-		const result = await initializeCache(options);
+		const result = await getOrInitializeCache(options);
 
 		expect(result).toBeDefined();
 		expect(result.store).toBeDefined();
@@ -30,7 +30,7 @@ describe('initializeCache', () => {
 			store: memoryStore(),
 		};
 
-		const result = await initializeCache(options);
+		const result = await getOrInitializeCache(options);
 
 		expect(result).toBeDefined();
 		expect(result.store).toBeDefined();
@@ -41,8 +41,8 @@ describe('initializeCache', () => {
 			store: memoryStore(),
 		};
 
-		const firstInit = await initializeCache(options);
-		const secondInit = await initializeCache(options);
+		const firstInit = await getOrInitializeCache(options);
+		const secondInit = await getOrInitializeCache(options);
 
 		expect(firstInit).toBe(secondInit);
 	});
@@ -52,11 +52,12 @@ describe('initializeCache', () => {
 			config: {max: 100, ttl: 60},
 		} as any;
 
-		await expect(initializeCache(options)).rejects.toThrow('store is required');
+		await expect(getOrInitializeCache(options)).rejects.toThrow('Store is not provided in options but is required to initialize the cache');
 	});
 
 	it('should throw an error if cache is not initialized and no options are provided', async () => {
-		await expect(initializeCache()).rejects.toThrow('cache is not initialized and no options provided');
+		resetCache();
+		await expect(getOrInitializeCache()).rejects.toThrow('cache is not initialized and no options provided');
 	});
 
 	it('should initialize cache only once, even with multiple config calls', async () => {
@@ -65,8 +66,8 @@ describe('initializeCache', () => {
 			config: {max: 100, ttl: 60},
 		};
 
-		const firstCall = await initializeCache(options);
-		const secondCall = await initializeCache();
+		const firstCall = await getOrInitializeCache(options);
+		const secondCall = await getOrInitializeCache();
 
 		expect(firstCall).toBe(secondCall);
 	});

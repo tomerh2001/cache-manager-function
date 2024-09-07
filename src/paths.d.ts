@@ -20,13 +20,9 @@ export type AnyFunction = (...arguments_: any[]) => any;
  *
  * @template T - The type of the object.
  */
-export type Paths<T> = T extends Record<string, unknown>
-	? {[K in keyof T]: `${Exclude<K, symbol>}${'' | `.${Paths<T[K]>}`}`}[keyof T]
-	: T extends Array<infer U>
-		? Paths<U> extends string
-			? `${number}` | `${number}.${Paths<U>}`
-			: never
-		: never;
+type Paths<T> = T extends Record<string, unknown> ? {[K in keyof T]:
+	`${Exclude<K, symbol>}${'' | `.${Paths<T[K]>}`}`
+}[keyof T] : never;
 
 /**
  * Represents the paths of the arguments of a given function type.

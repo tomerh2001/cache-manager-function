@@ -1,21 +1,22 @@
 import _ from 'lodash';
-import {type Cache, caching} from 'cache-manager';
+import {type Cache, caching, type Store} from 'cache-manager';
 import type {CachedFunctionInitializerOptions, CachedFunctionOptions} from './index.d';
 import type {AnyFunction, ArgumentPaths} from './paths.d';
 
 let cache: Cache | undefined;
 
-export async function initializeCache(options?: CachedFunctionInitializerOptions) {
+export async function getOrInitializeCache<S extends Store>(options?: CachedFunctionInitializerOptions) {
 	if (!cache && !options) {
 		throw new Error('cache is not initialized and no options provided');
 	}
 
-	if (options && !('store' in options)) {
-		throw new Error('store is required');
+	if (!cache && options && !('store' in options)) {
+		throw new Error('Store is not provided in options but is required to initialize the cache');
 	}
 
 	cache ||= await ('config' in options! ? caching(options.store, options.config) : caching(options!.store));
-	return cache;
+
+	return cache as Cache<S>;
 }
 
 export function resetCache() {
@@ -43,8 +44,7 @@ export function selectorToCacheKey<F extends AnyFunction>(arguments_: Parameters
 export function cachedFunction<F extends AnyFunction>(function_: F, options: CachedFunctionOptions<F>) {
 	return async (...arguments_: Parameters<F>): Promise<ReturnType<F>> => {
 		const cacheKey = selectorToCacheKey(arguments_, options.selector);
-
-		const cache = await initializeCache(options);
+		const cache = await getOrInitializeCache(options as CachedFunctionInitializerOptions);
 
 		const cacheValue = await cache.get<ReturnType<F>>(cacheKey);
 		if (cacheValue !== undefined) {
