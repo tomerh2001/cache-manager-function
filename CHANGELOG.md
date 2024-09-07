@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.0.0...v1.1.0) (2024-09-07)
+
+
+### Bug Fixes
+
+* fixed an issue with npm ([2aa306c](https://github.com/tomerh2001/cache-manager-function/commit/2aa306ceafa5b884be1341559a09d6ac807d7c24))
+* fixed npm package name ([7640df1](https://github.com/tomerh2001/cache-manager-function/commit/7640df15f8f6c5ef2f702d020c46fc189f55a512))
+* Update package name to "cache-manager-function" ([02975bb](https://github.com/tomerh2001/cache-manager-function/commit/02975bb2a917d6ac92a8384cff9e335d0d417532))
+
+
+### Features
+
+* Update package name to "cache-manager-function" ([fa5a06b](https://github.com/tomerh2001/cache-manager-function/commit/fa5a06b7280fd33019fb265f1fd23a4335d70e1b))
+
 ## [1.0.1](https://github.com/tomerh2001/cache-manager-function/compare/v1.0.0...v1.0.1) (2024-09-07)
 
 
