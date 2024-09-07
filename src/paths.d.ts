@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {type Cache} from 'cache-manager';
 import _ from 'lodash';
+import {type CachedFunctionOptions} from './index.d';
 
 /**
  * Represents a type that can either be a single value of type T or an array of type T.
@@ -14,7 +16,7 @@ export type SingleOrArray<T> = T | T[];
  * Represents any function that takes any number of arguments and returns any value.
  */
 export type AnyFunction = ((...arguments_: any[]) => any) & {
-	cacheKeys?: string[];
+	cacheOptions?: CachedFunctionOptions<any>;
 };
 
 /**

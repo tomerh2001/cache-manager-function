@@ -12,4 +12,5 @@ export type CachedFunctionInitializerOptions =
 export type CachedFunctionOptions<F extends AnyFunction> = Partial<CachedFunctionInitializerOptions> & {
 	selector?: ArgumentPaths<F>;
 	ttl?: number;
+	force?: boolean;
 };
