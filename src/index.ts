@@ -10,7 +10,15 @@ import type {AnyFunction as CacheableFunction, ArgumentPaths} from './paths.d';
 
 let cache: Cache | undefined;
 
-export async function getOrInitializeCache<S extends Store>(options?: CachedFunctionInitializerOptions) {
+/**
+ * Retrieves or initializes the cache.
+ *
+ * @template S - The type of the store.
+ * @param {CachedFunctionInitializerOptions} [options] - The options for initializing the cache.
+ * @returns {Promise<Cache<S>>} - A promise that resolves to the cache.
+ * @throws {Error} - If the cache is not initialized and no options are provided, or if the store is not provided in the options but is required to initialize the cache.
+ */
+export async function getOrInitializeCache<S extends Store>(options?: CachedFunctionInitializerOptions): Promise<Cache<S>> {
 	if (!cache && !options) {
 		throw new Error('cache is not initialized and no options provided');
 	}
@@ -25,12 +33,22 @@ export async function getOrInitializeCache<S extends Store>(options?: CachedFunc
 }
 
 /**
-	* @deprecated To close any open connections, please retrieve the cache object from `getOrInitializeCache` and close it directly.
-	*/
+ * @deprecated To close any open connections, please retrieve the cache object from `getOrInitializeCache` and close it directly.
+ */
 export function resetCache() {
 	cache = undefined;
 }
 
+/**
+ * Generates a cache key based on the provided arguments and selector.
+ *
+ * @template F - The type of the cacheable function.
+ * @param arguments_ - The arguments of the cacheable function.
+ * @param selector - The selector to determine which arguments to include in the cache key.
+ * @returns The cache key generated as a string.
+ * @throws {Error} If a path in the selector does not exist in the provided arguments.
+ * @throws {TypeError} If a path in the selector points to a function, which is not serializable.
+ */
 export function selectorToCacheKey<F extends CacheableFunction>(arguments_: Parameters<F>, selector: ArgumentPaths<F>) {
 	const selectors = _.castArray(selector);
 	if (selectors.length === 0) {
@@ -53,6 +71,15 @@ export function selectorToCacheKey<F extends CacheableFunction>(arguments_: Para
 	return JSON.stringify(result);
 }
 
+/**
+ * Caches the result of a function and returns the cached value if available.
+ * If the cached value is not available, it executes the function and caches the result for future use.
+ *
+ * @template F - The type of the function to be cached.
+ * @param function_ - The function to be cached.
+ * @param options - Optional configuration options for the cached function.
+ * @returns A promise that resolves to the result of the function.
+ */
 export function cachedFunction<F extends CacheableFunction>(function_: F, options?: CachedFunctionOptions<F>) {
 	return async (...arguments_: Parameters<F>): Promise<ReturnType<F>> => {
 		const cacheOptions = _.merge({}, options ?? {}, function_.cacheOptions ?? {});
@@ -75,11 +102,19 @@ export function cachedFunction<F extends CacheableFunction>(function_: F, option
 	};
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export function CacheOptions<F extends CacheableFunction>(
+/**
+ * Specify the options used when `cachedFunction` is invoked with this function.
+ * The decorator arguments take precedence over the options provided to `cachedFunction`.
+ *
+ * @template F - The type of the cacheable function.
+ * @param {ArgumentPaths<F> | CachedFunctionOptions<F>} selectorOrOptions - The selector or options for caching.
+ * @param {number} [ttl] - The time-to-live (TTL) for the cache.
+ * @returns {any} - The modified descriptor object.
+ */
+export function CacheOptions<F extends CacheableFunction>( // eslint-disable-line @typescript-eslint/naming-convention
 	selectorOrOptions: ArgumentPaths<F> | CachedFunctionOptions<F>,
 	ttl?: number,
-) {
+): any {
 	const options = (_.isArrayLike(selectorOrOptions) || _.isString(selectorOrOptions))
 		? {selector: selectorOrOptions, ttl}
 		: selectorOrOptions as CachedFunctionOptions<F>;
