@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.1.0...v1.2.0) (2024-09-08)
+
+
+### Bug Fixes
+
+* added TS to JS compilation for NPM package ([55534a7](https://github.com/tomerh2001/cache-manager-function/commit/55534a76c07cdef868927a2f058f71bb1505e169))
+
+
+### Features
+
+* Add Yarn v4 installation step to workflow ([f700521](https://github.com/tomerh2001/cache-manager-function/commit/f7005219f64434285f6d7583f82ca22134568468))
+
 # [1.1.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.0.0...v1.1.0) (2024-09-07)
 
 
