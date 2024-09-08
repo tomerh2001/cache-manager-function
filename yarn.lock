@@ -1498,6 +1498,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cache-manager-function@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "cache-manager-function@workspace:."
+  dependencies:
+    "@semantic-release/changelog": "npm:^6.0.3"
+    "@semantic-release/commit-analyzer": "npm:^13.0.0"
+    "@semantic-release/git": "npm:^10.0.1"
+    "@semantic-release/github": "npm:^10.3.3"
+    "@semantic-release/npm": "npm:^12.0.1"
+    "@semantic-release/release-notes-generator": "npm:^14.0.1"
+    "@types/lodash": "npm:^4.17.7"
+    bun-types: "npm:latest"
+    cache-manager: "npm:^5.7.6"
+    cache-manager-ioredis-yet: "npm:^2.1.1"
+    eslint-plugin-th-rules: "npm:^1.13.4"
+    lodash: "npm:^4.17.21"
+    reflect-metadata: "npm:^0.2.2"
+    xo: "npm:^0.59.3"
+  peerDependencies:
+    typescript: ^5.5.4
+  languageName: unknown
+  linkType: soft
+
 "cache-manager-ioredis-yet@npm:^2.1.1":
   version: 2.1.1
   resolution: "cache-manager-ioredis-yet@npm:2.1.1"
@@ -6175,29 +6198,6 @@ __metadata:
   checksum: 10c0/7e3c8b2e88a1841c9671094bbaeebd94448111dd90a81a1f606f3f67708a6ec57763b3b47f06da09fc6054193e0e6709e77325415dc8422b04497a8070fa02d4
   languageName: node
   linkType: hard
-
-"semantic-release-repo-template@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "semantic-release-repo-template@workspace:."
-  dependencies:
-    "@semantic-release/changelog": "npm:^6.0.3"
-    "@semantic-release/commit-analyzer": "npm:^13.0.0"
-    "@semantic-release/git": "npm:^10.0.1"
-    "@semantic-release/github": "npm:^10.3.3"
-    "@semantic-release/npm": "npm:^12.0.1"
-    "@semantic-release/release-notes-generator": "npm:^14.0.1"
-    "@types/lodash": "npm:^4.17.7"
-    bun-types: "npm:latest"
-    cache-manager: "npm:^5.7.6"
-    cache-manager-ioredis-yet: "npm:^2.1.1"
-    eslint-plugin-th-rules: "npm:^1.13.4"
-    lodash: "npm:^4.17.21"
-    reflect-metadata: "npm:^0.2.2"
-    xo: "npm:^0.59.3"
-  peerDependencies:
-    typescript: ^5.5.4
-  languageName: unknown
-  linkType: soft
 
 "semver@npm:2 || 3 || 4 || 5, semver@npm:^5.7.2":
   version: 5.7.2

@@ -1,7 +1,8 @@
 {
   "name": "cache-manager-function",
   "version": "1.1.0",
-  "module": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
@@ -19,6 +20,8 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
+    "build": "tsc",
+    "prepare": "yarn build",
     "test": "xo"
   },
   "dependencies": {

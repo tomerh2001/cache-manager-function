@@ -5,8 +5,9 @@
     "target": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "noEmit": false, 
+    "outDir": "dist",
+    "rootDir": "src",
     "composite": true,
     "strict": true,
     "downlevelIteration": true,
@@ -16,9 +17,11 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "types": [
-      "bun-types" // add Bun global
+      "bun-types"
     ],
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-  }
+    "experimentalDecorators": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts"]
 }
