@@ -18,26 +18,23 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-
     - name: Install LTS node
       uses: actions/setup-node@v4
       with:
         node-version: 'lts/*'
-    
-    - name: Install Yarn v4
-      run: yarn set version berry
+
+    - name: Install Yarn
+      run: npm install -g yarn
     
     - name: Install Dependencies
-      run: bun i --dev
+      run: yarn install
 
     # Authenticate with ghcr.io
     - name: Authenticate with ghcr.io
       run: echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Semantic Release
-      run: bunx semantic-release
+      run: npx semantic-release
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
