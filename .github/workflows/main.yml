@@ -26,6 +26,9 @@ jobs:
       with:
         node-version: 'lts/*'
     
+    - name: Install Yarn v4
+      run: yarn set version berry
+    
     - name: Install Dependencies
       run: bun i --dev
 
