@@ -13,6 +13,17 @@ import {
 export type SingleOrArray<T> = T | T[];
 
 /**
+ * Represents a logger object.
+ */
+export type Logger = {
+	trace: (...args: any) => any;
+	debug: (...args: any) => any;
+	info: (...args: any) => any;
+	warn: (...args: any) => any;
+	error: (...args: any) => any;
+}
+
+/**
  * Represents any function that takes any number of arguments and returns any value.
  */
 export type CacheableFunction = ((...arguments_: any[]) => any) & {
@@ -41,9 +52,8 @@ export type ArgumentPaths<F extends CacheableFunction> = SingleOrArray<Paths<Par
 /**
  * Represents the options for initializing a cached function.
  */
-export type CachedFunctionInitializerOptions =
-	{store: FactoryStore; config: FactoryConfig} |
-	{store: Store};
+export type CachedFunctionInitializerOptions = {logger?: Partial<Logger>;} &
+	({store: FactoryStore; config: FactoryConfig} | {store: Store});
 
 /**
  * Options for a cached function.

@@ -8,6 +8,7 @@ const cache = await getOrInitializeCache<RedisStore>({
 		host: 'localhost',
 		port: 6379,
 	}),
+	logger: console
 });
 
 type Person = {
