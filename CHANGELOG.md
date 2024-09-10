@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.2.0...v1.3.0) (2024-09-10)
+
+
+### Features
+
+* added trace logging ([eefd68a](https://github.com/tomerh2001/cache-manager-function/commit/eefd68a1b430d5923ce5668df19f7c7ce78fdafd))
+
 # [1.2.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.1.0...v1.2.0) (2024-09-08)
 
 
