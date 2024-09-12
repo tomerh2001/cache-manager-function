@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.4.0...v1.5.0) (2024-09-12)
+
+
+### Features
+
+* added `namespace` to options ([9b34c82](https://github.com/tomerh2001/cache-manager-function/commit/9b34c8265e9a1f8350bb7fc183182768c15cc08f))
+* added `returnRawValue` to options ([c37efe6](https://github.com/tomerh2001/cache-manager-function/commit/c37efe6729b7dcb7477774e1b806a1a3a965235e))
+
 # [1.4.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.3.0...v1.4.0) (2024-09-12)
 
 
