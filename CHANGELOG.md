@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.1...v1.5.2) (2024-09-12)
+
+
+### Bug Fixes
+
+* Export all types from './types' ([d45eaae](https://github.com/tomerh2001/cache-manager-function/commit/d45eaae2501bf88d88ce55409c293cb9b1a5f920))
+
 ## [1.5.1](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.0...v1.5.1) (2024-09-12)
 
 
