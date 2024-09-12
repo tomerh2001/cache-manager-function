@@ -8,9 +8,9 @@ import {
 	type CachedFunctionInitializerOptions, type CachedFunctionOptions, type CacheableFunction, type ArgumentPaths,
 	type Logger,
 	type CachedFunctionResult,
-} from './types';
+} from './types.d';
 
-export * from './types';
+export * from './types.d';
 
 let cache: Cache | undefined;
 let logger: Logger = {
