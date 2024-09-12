@@ -10,6 +10,8 @@ import {
 	type CachedFunctionResult,
 } from './types';
 
+export * from './types';
+
 let cache: Cache | undefined;
 let logger: Logger = {
 	info(...arguments_: any) {}, 	// eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
