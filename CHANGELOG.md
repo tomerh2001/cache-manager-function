@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.3.0...v1.4.0) (2024-09-12)
+
+
+### Features
+
+* added `noCache` to options ([8d21047](https://github.com/tomerh2001/cache-manager-function/commit/8d21047c71876218b188b33672f107e9a47f2544))
+
 # [1.3.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.2.0...v1.3.0) (2024-09-10)
 
 
