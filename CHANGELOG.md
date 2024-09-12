@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.2...v1.5.3) (2024-09-12)
+
+
+### Bug Fixes
+
+* fixed a bug with the types import ([7f3b2d8](https://github.com/tomerh2001/cache-manager-function/commit/7f3b2d8677dd71e99b7532da4cfa0165bf740b4b))
+
 ## [1.5.2](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.1...v1.5.2) (2024-09-12)
 
 
