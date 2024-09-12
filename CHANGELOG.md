@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.0...v1.5.1) (2024-09-12)
+
+
+### Bug Fixes
+
+* Fixed missing declaration files in dist ([98491e1](https://github.com/tomerh2001/cache-manager-function/commit/98491e162037e02ac8fe5ed87064205c3926a638))
+
 # [1.5.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.4.0...v1.5.0) (2024-09-12)
 
 
