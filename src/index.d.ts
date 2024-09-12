@@ -16,12 +16,12 @@ export type SingleOrArray<T> = T | T[];
  * Represents a logger object.
  */
 export type Logger = {
-	trace: (...args: any) => any;
-	debug: (...args: any) => any;
-	info: (...args: any) => any;
-	warn: (...args: any) => any;
-	error: (...args: any) => any;
-}
+	trace: (...arguments_: any) => any;
+	debug: (...arguments_: any) => any;
+	info: (...arguments_: any) => any;
+	warn: (...arguments_: any) => any;
+	error: (...arguments_: any) => any;
+};
 
 /**
  * Represents any function that takes any number of arguments and returns any value.
@@ -52,8 +52,8 @@ export type ArgumentPaths<F extends CacheableFunction> = SingleOrArray<Paths<Par
 /**
  * Represents the options for initializing a cached function.
  */
-export type CachedFunctionInitializerOptions = {logger?: Partial<Logger>;} &
-	({store: FactoryStore; config: FactoryConfig} | {store: Store});
+export type CachedFunctionInitializerOptions = {logger?: Partial<Logger>} &
+({store: FactoryStore; config: FactoryConfig} | {store: Store});
 
 /**
  * Options for a cached function.
@@ -73,4 +73,41 @@ export type CachedFunctionOptions<F extends CacheableFunction> = Partial<CachedF
 	force?: boolean;
 	/** Don't use the cache at all - when `true`, calls to functions wrapped by `cachedFunction` will essentially just call the original function. */
 	noCache?: boolean;
+	/**
+	 * This can be used to namespace the keys in the cache.
+	 *
+	 * Will be inserted into the key object as `{namespace: value}`.
+	 */
+	namespace?: string;
+	/**
+	 * If set to `true`, the function will return the raw value (either from the cache or the function call),
+	 * instead of the `CachedFunctionResult` object.
+	 */
+	returnRawValue?: boolean;
+};
+
+export type CacheStatus = 'hit' | 'miss';
+export type CachedFunctionResult<T> = {
+	/**
+	 * The options used to cache the function.
+	 */
+	options: CachedFunctionOptions<CacheableFunction>;
+	/**
+	 * The status of the cache.
+	 * - `'hit'` - The cache was found.
+	 * - `'miss'` - The cache was not found.
+	*/
+	status?: CacheStatus;
+	/**
+	 * The cache key used to store the value.
+	 */
+	key?: string;
+	/**
+	 * The result returned by the function/cache.
+	 */
+	result: T;
+	/**
+	 * Whether the cache `set` operation was called.
+	 */
+	created: boolean;
 };

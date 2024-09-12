@@ -17,7 +17,7 @@
     "xo": "^0.59.3"
   },
   "peerDependencies": {
-    "typescript": "^5.6.2"
+    "typescript": "^5.5.4"
   },
   "scripts": {
     "build": "tsc",

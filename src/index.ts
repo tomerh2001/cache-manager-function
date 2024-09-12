@@ -3,21 +3,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import _ from 'lodash';
-import {
-	type Cache, caching, type Store,
-} from 'cache-manager';
+import {type Cache, caching, type Store} from 'cache-manager';
 import {
 	type CachedFunctionInitializerOptions, type CachedFunctionOptions, type CacheableFunction, type ArgumentPaths,
-	Logger,
+	type Logger,
+	type CachedFunctionResult,
 } from './index.d';
 
 let cache: Cache | undefined;
 let logger: Logger = {
-	info(...args: any) {},
-	debug(...args: any) {},
-	trace(...args: any) {},
-	warn(...args: any) {},
-	error(...args: any) {},
+	info(...arguments_: any) {}, 	// eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+	debug(...arguments_: any) {}, 	// eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+	trace(...arguments_: any) {},	// eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+	warn(...arguments_: any) {},	// eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+	error(...arguments_: any) {},	// eslint-disable-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
 };
 
 /**
@@ -41,9 +40,9 @@ export async function getOrInitializeCache<S extends Store>(options?: CachedFunc
 		logger = options.logger as Logger;
 	}
 
-	logger?.trace('Initializing cache');
+	logger.trace('Initializing cache');
 	cache ||= await ('config' in options! ? caching(options.store, options.config) : caching(options!.store));
-	logger?.trace('Cache initialized');
+	logger.trace('Cache initialized');
 
 	return cache as Cache<S>;
 }
@@ -53,7 +52,7 @@ export async function getOrInitializeCache<S extends Store>(options?: CachedFunc
  */
 export function resetCache() {
 	cache = undefined;
-	logger?.warn('You have called resetCache, which is deprecated and basically does nothing. To close any open connections, please retrieve the cache object from getOrInitializeCache and close it directly.');
+	logger.warn('You have called resetCache, which is deprecated and basically does nothing. To close any open connections, please retrieve the cache object from getOrInitializeCache and close it directly.');
 }
 
 /**
@@ -66,10 +65,10 @@ export function resetCache() {
  * @throws {Error} If a path in the selector does not exist in the provided arguments.
  * @throws {TypeError} If a path in the selector points to a function, which is not serializable.
  */
-export function selectorToCacheKey<F extends CacheableFunction>(arguments_: Parameters<F>, selector: ArgumentPaths<F>) {
+export function selectorToCacheKey<F extends CacheableFunction>(arguments_: Parameters<F>, selector: ArgumentPaths<F>, namespace?: string): string {
 	const selectors = _.castArray(selector);
 	if (selectors.length === 0) {
-		logger?.trace(arguments_, 'No selectors provided, using the entire arguments object as the cache key');
+		logger.trace(arguments_, 'No selectors provided, using the entire arguments object as the cache key');
 		return JSON.stringify(arguments_);
 	}
 
@@ -85,7 +84,12 @@ export function selectorToCacheKey<F extends CacheableFunction>(arguments_: Para
 
 		return value;
 	});
+
 	const result = _.zipObject(selectors, values);
+	if (namespace) {
+		result.namespace = namespace;
+	}
+
 	return JSON.stringify(result);
 }
 
@@ -99,34 +103,64 @@ export function selectorToCacheKey<F extends CacheableFunction>(arguments_: Para
  * @returns A promise that resolves to the result of the function.
  */
 export function cachedFunction<F extends CacheableFunction>(function_: F, options?: CachedFunctionOptions<F>) {
-	return async (...arguments_: Parameters<F>): Promise<ReturnType<F>> => {
+	return async (...arguments_: Parameters<F>): Promise<ReturnType<F> | CachedFunctionResult<ReturnType<F>>> => {
 		const cacheOptions = _.merge({}, options ?? {}, function_.cacheOptions ?? {});
 		if (_.keys(cacheOptions).length === 0) {
 			throw new Error('No cache options provided, either use the @CacheOptions decorator or provide options to cachedFunction directly.');
 		}
 
-		if (!cacheOptions.noCache) {
-			logger.trace('Cache is disabled, calling the original function directly');
+		if (cacheOptions.noCache && cacheOptions.returnRawValue) {
+			logger.trace('Cache is disabled via `noCache=true`. Calling the original function directly and returning the raw value');
 			return function_(...arguments_) as ReturnType<F>;
+		}
+
+		if (cacheOptions.noCache && !cacheOptions.returnRawValue) {
+			logger.trace('Cache is disabled via `noCache=true`. Calling the original function directly and returning a `CachedFunctionResult` object');
+			return {
+				result: function_(...arguments_) as ReturnType<F>,
+				created: false,
+				options: cacheOptions,
+			};
 		}
 
 		const cacheKey = selectorToCacheKey(arguments_, cacheOptions.selector!);
 		const cache = await getOrInitializeCache(options as CachedFunctionInitializerOptions);
 
-		logger?.trace({cacheKey}, 'Checking cache');
+		logger.trace({cacheKey}, 'Checking cache');
 		const cacheValue = await cache.get<ReturnType<F>>(cacheKey);
-		if (!cacheOptions.force && cacheValue !== undefined) {
-			logger?.trace({cacheKey}, 'Cache hit');
+		if (!cacheOptions.force && !_.isNil(cacheValue) && cacheOptions.returnRawValue) {
+			logger.trace({cacheKey}, 'Cache hit');
 			return cacheValue;
 		}
-		logger?.trace({cacheKey}, 'Cache miss');
 
+		if (!cacheOptions.force && !_.isNil(cacheValue) && !cacheOptions.returnRawValue) {
+			logger.trace({cacheKey}, 'Cache hit');
+			return {
+				key: cacheKey,
+				result: cacheValue,
+				status: 'hit',
+				created: false,
+				options: cacheOptions,
+			};
+		}
+
+		logger.trace({cacheKey}, 'Cache miss');
 		const result = await function_(...arguments_) as ReturnType<F>;
-		logger?.trace({cacheKey}, 'Setting cache');
+		logger.trace({cacheKey}, 'Setting cache');
 		await cache.set(cacheKey, result, cacheOptions.ttl);
-		logger?.trace({cacheKey}, 'Cache set');
+		logger.trace({cacheKey}, 'Cache set');
 
-		return result;
+		if (cacheOptions.returnRawValue) {
+			return result;
+		}
+
+		return {
+			key: cacheKey,
+			result,
+			status: 'miss',
+			created: true,
+			options: cacheOptions,
+		};
 	};
 }
 
@@ -169,7 +203,7 @@ export function CacheOptions<F extends CacheableFunction>(
 		descriptor: TypedPropertyDescriptor<F>,
 	): any => {
 		if (!descriptor.value) {
-			logger?.warn('CacheOptions decorator is only supported on methods');
+			logger.warn('CacheOptions decorator is only supported on methods');
 			return;
 		}
 
