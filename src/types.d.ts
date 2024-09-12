@@ -1,3 +1,6 @@
+/* eslint-disable sonarjs/todo-tag */
+/* eslint-disable no-warning-comments */
+/* eslint-disable sonarjs/redundant-type-aliases */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	type Store,

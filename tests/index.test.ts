@@ -6,7 +6,7 @@ import {memoryStore} from 'cache-manager';
 import {
 	getOrInitializeCache, selectorToCacheKey, cachedFunction, resetCache,
 } from '../src/index';
-import type {CachedFunctionInitializerOptions, CachedFunctionOptions} from '../src/index.d';
+import type {CachedFunctionInitializerOptions, CachedFunctionOptions} from '../src/types';
 
 describe('initializeCache', () => {
 	beforeEach(() => {

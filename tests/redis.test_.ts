@@ -2,14 +2,13 @@
 import {random} from 'lodash';
 import {type RedisStore, redisStore} from 'cache-manager-ioredis-yet';
 import {cachedFunction, CacheOptions, getOrInitializeCache} from '../src';
-import { selectorToCacheKey } from '../src/index';
 
 const cache = await getOrInitializeCache<RedisStore>({
 	store: await redisStore({
 		host: 'localhost',
 		port: 6379,
 	}),
-	logger: console
+	logger: console,
 });
 
 type Person = {

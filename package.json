@@ -20,7 +20,7 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp src/**/*.d.ts dist/",
     "prepare": "yarn build",
     "test": "xo"
   },
@@ -28,7 +28,8 @@
     "cache-manager": "^5.7.6",
     "eslint-plugin-th-rules": "^1.14.0",
     "lodash": "^4.17.21",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "typescript": "^5.5.4"
   },
   "packageManager": "yarn@4.4.1"
 }

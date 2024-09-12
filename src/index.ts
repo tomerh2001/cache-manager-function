@@ -8,7 +8,7 @@ import {
 	type CachedFunctionInitializerOptions, type CachedFunctionOptions, type CacheableFunction, type ArgumentPaths,
 	type Logger,
 	type CachedFunctionResult,
-} from './index.d';
+} from './types';
 
 let cache: Cache | undefined;
 let logger: Logger = {

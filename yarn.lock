@@ -3124,6 +3124,7 @@ __metadata:
     eslint-plugin-th-rules: "npm:^1.14.0"
     lodash: "npm:^4.17.21"
     reflect-metadata: "npm:^0.2.2"
+    typescript: "npm:^5.5.4"
     xo: "npm:^0.59.3"
   peerDependencies:
     typescript: ^5.5.4
@@ -8848,7 +8849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:*, typescript@npm:^5.5.3":
+"typescript@npm:*, typescript@npm:^5.5.3, typescript@npm:^5.5.4":
   version: 5.6.2
   resolution: "typescript@npm:5.6.2"
   bin:
@@ -8858,7 +8859,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A*#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A*#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.5.4#optional!builtin<compat/typescript>":
   version: 5.6.2
   resolution: "typescript@patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"
   bin:
