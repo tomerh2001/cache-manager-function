@@ -2,6 +2,7 @@
 import {random} from 'lodash';
 import {type RedisStore, redisStore} from 'cache-manager-ioredis-yet';
 import {cachedFunction, CacheOptions, getOrInitializeCache} from '../src';
+import { selectorToCacheKey } from '../src/index';
 
 const cache = await getOrInitializeCache<RedisStore>({
 	store: await redisStore({
@@ -22,14 +23,14 @@ type Person = {
 };
 
 class CachedPersonCreator {
-	@CacheOptions('0.name', 10_000)
+	@CacheOptions({ttl: 10_000})
 	static async createPerson(person: Person) {
 		console.log('Person created!!!!!');
 		return person;
 	}
 }
 
-const cachedCreatePerson = cachedFunction(CachedPersonCreator.createPerson);
+const cachedCreatePerson = cachedFunction(CachedPersonCreator.createPerson, {ttl: -2345, selector: ['0.name']});
 const person = await cachedCreatePerson({
 	id: random(0, 100_000).toString(),
 	name: 'Tomer Horowitz',

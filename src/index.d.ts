@@ -65,7 +65,12 @@ export type CachedFunctionInitializerOptions = {logger?: Partial<Logger>;} &
  * @property {boolean} [force] - Whether to force the execution of the cached function.
  */
 export type CachedFunctionOptions<F extends CacheableFunction> = Partial<CachedFunctionInitializerOptions> & {
+	/** The selector for the cached function. */
 	selector?: ArgumentPaths<F>;
+	/** The time-to-live (TTL) for the cached function. */
 	ttl?: number;
+	/** Whether to force update the cache. */
 	force?: boolean;
+	/** Don't use the cache at all - when `true`, calls to functions wrapped by `cachedFunction` will essentially just call the original function. */
+	noCache?: boolean;
 };

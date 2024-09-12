@@ -41,7 +41,7 @@ export async function getOrInitializeCache<S extends Store>(options?: CachedFunc
 		logger = options.logger as Logger;
 	}
 
-	logger?.trace({options}, 'Initializing cache');
+	logger?.trace('Initializing cache');
 	cache ||= await ('config' in options! ? caching(options.store, options.config) : caching(options!.store));
 	logger?.trace('Cache initialized');
 
@@ -105,21 +105,26 @@ export function cachedFunction<F extends CacheableFunction>(function_: F, option
 			throw new Error('No cache options provided, either use the @CacheOptions decorator or provide options to cachedFunction directly.');
 		}
 
+		if (!cacheOptions.noCache) {
+			logger.trace('Cache is disabled, calling the original function directly');
+			return function_(...arguments_) as ReturnType<F>;
+		}
+
 		const cacheKey = selectorToCacheKey(arguments_, cacheOptions.selector!);
 		const cache = await getOrInitializeCache(options as CachedFunctionInitializerOptions);
 
-		logger?.trace({cacheOptions, cacheKey}, 'Checking cache');
+		logger?.trace({cacheKey}, 'Checking cache');
 		const cacheValue = await cache.get<ReturnType<F>>(cacheKey);
 		if (!cacheOptions.force && cacheValue !== undefined) {
-			logger?.trace({cacheOptions, cacheKey}, 'Cache hit');
+			logger?.trace({cacheKey}, 'Cache hit');
 			return cacheValue;
 		}
-		logger?.trace({cacheOptions, cacheKey}, 'Cache miss');
+		logger?.trace({cacheKey}, 'Cache miss');
 
 		const result = await function_(...arguments_) as ReturnType<F>;
-		logger?.trace({cacheOptions, cacheKey}, 'Setting cache');
+		logger?.trace({cacheKey}, 'Setting cache');
 		await cache.set(cacheKey, result, cacheOptions.ttl);
-		logger?.trace({cacheOptions, cacheKey}, 'Cache set');
+		logger?.trace({cacheKey}, 'Cache set');
 
 		return result;
 	};
@@ -169,8 +174,6 @@ export function CacheOptions<F extends CacheableFunction>(
 		}
 
 		descriptor.value.cacheOptions = options;
-		logger?.trace({options}, 'Cache options set');
-		
 		return descriptor;
 	};
 }
