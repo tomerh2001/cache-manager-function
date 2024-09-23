@@ -25,7 +25,7 @@
     "test": "xo"
   },
   "dependencies": {
-    "cache-manager": "^5.7.6",
+    "cache-manager": "^6.0.0",
     "eslint-plugin-th-rules": "^1.14.0",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.2.2",
