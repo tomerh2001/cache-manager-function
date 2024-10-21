@@ -11,7 +11,7 @@
     "@semantic-release/github": "^10.3.3",
     "@semantic-release/npm": "^12.0.1",
     "@semantic-release/release-notes-generator": "^14.0.1",
-    "@types/lodash": "^4.17.7",
+    "@types/lodash": "^4.17.12",
     "bun-types": "latest",
     "cache-manager-ioredis-yet": "^2.1.1",
     "xo": "^0.59.3"
