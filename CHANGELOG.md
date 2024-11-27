@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.3...v1.6.0) (2024-11-27)
+
+
+### Features
+
+* add invalidateCache function to manage cache invalidation ([a190bda](https://github.com/tomerh2001/cache-manager-function/commit/a190bdacf69639674a0861422fc53aea785886c3))
+
 ## [1.5.3](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.2...v1.5.3) (2024-09-12)
 
 
