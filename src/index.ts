@@ -167,6 +167,32 @@ export function cachedFunction<F extends CacheableFunction>(function_: F, option
 }
 
 /**
+ * Invalidates the cache for a function based on the provided arguments.
+ *
+ * @template F - The type of the cacheable function.
+ * @param function_ - The cacheable function.
+ * @param arguments_ - The arguments of the cacheable function.
+ * @param options - Optional configuration options for the cached function.
+ * @returns {Promise<string>} - A promise that resolves to the cache key that was invalidated.
+ * @throws {Error} - If no cache options are provided or cannot be inferred from the function.
+ */
+export async function invalidateCache<F extends CacheableFunction>(function_: F, arguments_: Parameters<F>, options?: CachedFunctionOptions<F>): Promise<string> {
+	const cacheOptions = _.merge({}, options ?? {}, function_.cacheOptions ?? {});
+	if (_.keys(cacheOptions).length === 0) {
+		throw new Error('No cache options provided, either use the @CacheOptions decorator or provide options to cachedFunction directly.');
+	}
+
+	const cacheKey = selectorToCacheKey(arguments_, cacheOptions.selector!, cacheOptions.namespace);
+	const cache = await getOrInitializeCache(options as CachedFunctionInitializerOptions);
+
+	logger.trace({cacheKey}, 'Invalidating cache');
+	await cache.del(cacheKey);
+	logger.trace({cacheKey}, 'Cache invalidated');
+
+	return cacheKey;
+}
+
+/**
  * Decorator for caching the result of a function based on selected arguments.
  *
  * This overload allows specifying the arguments that will be used to generate the cache key, and optionally a TTL (time to live).
@@ -179,7 +205,6 @@ export function cachedFunction<F extends CacheableFunction>(function_: F, option
  * @returns {Function} A decorator function that adds caching options to the method's descriptor.
  */
 export function CacheOptions<F extends CacheableFunction>(selector: ArgumentPaths<F>, ttl?: number): any;
-
 /**
  * Decorator for caching the result of a function.
  *
