@@ -3132,13 +3132,13 @@ __metadata:
   linkType: soft
 
 "cache-manager-ioredis-yet@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "cache-manager-ioredis-yet@npm:2.1.1"
+  version: 2.1.2
+  resolution: "cache-manager-ioredis-yet@npm:2.1.2"
   dependencies:
     cache-manager: "npm:*"
     ioredis: "npm:^5.4.1"
     telejson: "npm:^7.2.0"
-  checksum: 10c0/4e8ac251f967310b93b54c6aefddf0f210435691157932da9e440af8141b6af9632d1a815fc35d314e15e1364227154b5f9488410e06954bf78bf61ba62851c4
+  checksum: 10c0/5c6cf63991cd6e8609b0780c43a17f21525f795971eedb772f0bde158318605f4eb56926632a5d21092fea0160b9cc172903e9d190d912532e37facb06b927ba
   languageName: node
   linkType: hard
 
