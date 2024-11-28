@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/tomerh2001/cache-manager-function/compare/v1.6.0...v1.6.1) (2024-11-28)
+
+
+### Bug Fixes
+
+* include namespace in cache key generation for cachedFunction ([840b511](https://github.com/tomerh2001/cache-manager-function/commit/840b511e8d03b131b233028188d58abb418286ea))
+
 # [1.6.0](https://github.com/tomerh2001/cache-manager-function/compare/v1.5.3...v1.6.0) (2024-11-27)
 
 
