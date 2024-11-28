@@ -125,7 +125,7 @@ export function cachedFunction<F extends CacheableFunction>(function_: F, option
 			};
 		}
 
-		const cacheKey = selectorToCacheKey(arguments_, cacheOptions.selector!);
+		const cacheKey = selectorToCacheKey(arguments_, cacheOptions.selector!, cacheOptions.namespace);
 		const cache = await getOrInitializeCache(options as CachedFunctionInitializerOptions);
 
 		logger.trace({cacheKey}, 'Checking cache');
