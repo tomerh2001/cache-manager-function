@@ -3062,12 +3062,12 @@ __metadata:
   linkType: hard
 
 "bun-types@npm:latest":
-  version: 1.1.27
-  resolution: "bun-types@npm:1.1.27"
+  version: 1.1.38
+  resolution: "bun-types@npm:1.1.38"
   dependencies:
     "@types/node": "npm:~20.12.8"
     "@types/ws": "npm:~8.5.10"
-  checksum: 10c0/f74fcbfd5195101b32d49a3797b39a5dfe40c314ce5358000db84689b8521ed42fd767a37deab0f77d583be93fa2e9f9993f132ae8b0920334b784fa5fac2a2a
+  checksum: 10c0/74ba13e3407826b7f1e1d95dfc0ffcd6653f6306e43caf6c7b1dace54fc53a1d9312737693084541e3a65408b3fa9f34be8279bf5d2d16b4cbf073db9338deb6
   languageName: node
   linkType: hard
 
