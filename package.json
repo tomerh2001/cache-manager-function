@@ -14,7 +14,7 @@
     "@types/lodash": "^4.17.7",
     "bun-types": "latest",
     "cache-manager-ioredis-yet": "^2.1.1",
-    "xo": "^0.59.3"
+    "xo": "^0.60.0"
   },
   "peerDependencies": {
     "typescript": "^5.5.4"
